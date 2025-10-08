@@ -1,112 +1,341 @@
-// ----- Utilities -----
-const currency = (v)=> Number(v).toFixed(2).replace('.',',');
-const now = ()=> new Date().toISOString();
+// Demo web app logic: catalog, cart, orders, reports using localStorage
 
-// ----- Sample product list (30 items) -----
+/* ---------------------------
+   Demo data: Produtos (mock)
+   --------------------------- */
 const PRODUCTS = [
-  {id:1,name:'Adubo NPK 20kg',price:135.50},
-  {id:2,name:'Semente de Milho 10kg',price:220.00},
-  {id:3,name:'Semente de Soja 10kg',price:198.20},
-  {id:4,name:'Inseticida X-200 1L',price:45.00},
-  {id:5,name:'Fertilizante Foliar 2L',price:72.00},
-  {id:6,name:'Calcário 20kg',price:90.50},
-  {id:7,name:'Herbicida Agro 1L',price:62.30},
-  {id:8,name:'Ração Bovinos 25kg',price:162.00},
-  {id:9,name:'Saco de Silagem 1un',price:18.00},
-  {id:10,name:'Pneu Trator 18"',price:780.00},
-  {id:11,name:'Lubrificante 5L',price:58.00},
-  {id:12,name:'Luvas Térmicas (par)',price:18.50},
-  {id:13,name:'Mangueira 10m',price:55.00},
-  {id:14,name:'Colete de Proteção',price:120.00},
-  {id:15,name:'Bomba de Irrigação',price:1250.00},
-  {id:16,name:'Arado Simples',price:3200.00},
-  {id:17,name:'Ferramenta Manual (kit)',price:98.00},
-  {id:18,name:'Sementes de Feijão 5kg',price:84.00},
-  {id:19,name:'Rolo Compactador',price:560.00},
-  {id:20,name:'Baldes 20L (un)',price:12.50},
-  {id:21,name:'Fertilizante Orgânico 10kg',price:110.00},
-  {id:22,name:'Estopa para Oficina',price:6.00},
-  {id:23,name:'Correia Trator',price:220.00},
-  {id:24,name:'Válvula 1"',price:34.00},
-  {id:25,name:'Caixa de Ferramentas',price:240.00},
-  {id:26,name:'Ração Aves 20kg',price:98.00},
-  {id:27,name:'Sementes Pastagem 5kg',price:76.50},
-  {id:28,name:'Fita Métrica 5m',price:14.80},
-  {id:29,name:'Viveiro de Mudas (kit)',price:460.00},
-  {id:30,name:'Kit Irrigação Gotejo',price:330.00}
+  { id: '1', nome: 'Semente de milho', preco: 150, img: 'https://via.placeholder.com/120?text=Milho' },
+  { id: '2', nome: 'Adubo NPK 20-05-20', preco: 120, img: 'https://via.placeholder.com/120?text=NPK' },
+  { id: '3', nome: 'Defensivo agrícola', preco: 90, img: 'https://via.placeholder.com/120?text=Defensivo' },
+  { id: '4', nome: 'Semente de soja', preco: 140, img: 'https://via.placeholder.com/120?text=Soja' },
 ];
 
-// ----- Persistence keys -----
-const KEY_CART = 'coop_cart_v1';
-const KEY_USER = 'coop_user_v1';
-const KEY_SALES = 'coop_sales_v1';
+/* ---------------------------
+   Storage helpers
+   --------------------------- */
+const STORAGE = {
+  getCart(){ return JSON.parse(localStorage.getItem('coop_cart') || '[]'); },
+  setCart(c){ localStorage.setItem('coop_cart', JSON.stringify(c)); },
+  getUser(){ return JSON.parse(localStorage.getItem('coop_user') || 'null'); },
+  setUser(u){ localStorage.setItem('coop_user', JSON.stringify(u)); },
+  getOrders(){ return JSON.parse(localStorage.getItem('coop_orders') || '[]'); },
+  setOrders(o){ localStorage.setItem('coop_orders', JSON.stringify(o)); }
+};
 
-// ----- App state -----
-let cart = JSON.parse(localStorage.getItem(KEY_CART) || '[]');
-let user = JSON.parse(localStorage.getItem(KEY_USER) || 'null');
-let sales = JSON.parse(localStorage.getItem(KEY_SALES) || '[]');
+/* ---------------------------
+   DOM references
+   --------------------------- */
+const views = {
+  login: document.getElementById('view-login'),
+  home: document.getElementById('view-home'),
+  catalog: document.getElementById('view-catalog'),
+  cart: document.getElementById('view-cart'),
+  orders: document.getElementById('view-orders'),
+  reports: document.getElementById('view-reports'),
+};
+const navBtns = document.querySelectorAll('.nav-btn');
+const actionCards = document.querySelectorAll('.action');
+const loginForm = document.getElementById('login-form');
+const btnLogin = document.getElementById('btn-login');
+const btnLogout = document.getElementById('btn-logout');
+const usernameDisplay = document.getElementById('username-display');
+const userArea = document.getElementById('user-area');
+const productsEl = document.getElementById('products');
+const searchInput = document.getElementById('search');
+const cartCountEl = document.getElementById('cart-count');
+const cartListEl = document.getElementById('cart-list');
+const cartTotalEl = document.getElementById('cart-total');
+const btnClear = document.getElementById('btn-clear');
+const btnCheckout = document.getElementById('btn-checkout');
+const ordersListEl = document.getElementById('orders-list');
+const reportTotalEl = document.getElementById('report-total');
+const reportCountEl = document.getElementById('report-count');
+const chartCanvas = document.getElementById('chart');
 
-// ----- Render functions -----
-function renderProducts(){
-  const wrap = document.getElementById('products'); wrap.innerHTML = '';
-  PRODUCTS.forEach(p=>{
-    const el = document.createElement('div'); el.className='card';
-    el.innerHTML = `
-      <div class="thumb">🌾</div>
-      <h3>${p.name}</h3>
-      <div class="price">R$ ${currency(p.price)}</div>
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <input type="number" min="1" value="1" data-id="${p.id}" style="width:68px;padding:6px;border-radius:8px;border:1px solid rgba(0,0,0,0.06)" />
-        <button data-id="${p.id}">Adicionar</button>
-      </div>`;
-    wrap.appendChild(el);
-  });
-  document.querySelectorAll('.card button').forEach(b=>b.addEventListener('click',addFromCard));
+/* ---------------------------
+   Navigation & Auth
+   --------------------------- */
+function showView(name){
+  Object.values(views).forEach(v => v.hidden = true);
+  const target = views[name];
+  if(target) target.hidden = false;
+  window.scrollTo({top:0, behavior:'smooth'});
 }
 
-function addFromCard(e){
-  const id = Number(e.currentTarget.dataset.id);
-  const qtyEl = e.currentTarget.previousElementSibling;
-  const qty = Number(qtyEl.value) || 1;
-  addToCart(id, qty);
+navBtns.forEach(b => b.addEventListener('click', ()=> {
+  const view = b.dataset.view;
+  navigateTo(view);
+}));
+actionCards.forEach(c => c.addEventListener('click', ()=> {
+  const view = c.dataset.view;
+  navigateTo(view);
+}));
+
+function navigateTo(view){
+  const user = STORAGE.getUser();
+  if(!user && view !== 'login'){
+    showView('login');
+    return;
+  }
+  showView(view);
+  if(view === 'catalog') renderProducts();
+  if(view === 'cart') renderCart();
+  if(view === 'orders') renderOrders();
+  if(view === 'reports') renderReports();
+  updateCartCount();
 }
 
-function addToCart(id, qty=1){
-  const prod = PRODUCTS.find(p=>p.id===id); if(!prod) return;
-  const found = cart.find(i=>i.id===id);
-  if(found) found.qty += qty; else cart.push({id:id, qty:qty, name:prod.name, price:prod.price});
-  syncCart(); renderCart(); toast('Adicionado ao carrinho')
+/* Auth */
+function refreshAuthUI(){
+  const user = STORAGE.getUser();
+  if(user){
+    document.getElementById('btn-login').style.display = 'none';
+    btnLogout.style.display = 'inline-block';
+    usernameDisplay.style.display = 'inline-block';
+    usernameDisplay.textContent = user.username;
+  }else{
+    document.getElementById('btn-login').style.display = 'inline-block';
+    btnLogout.style.display = 'none';
+    usernameDisplay.style.display = 'none';
+  }
 }
-
-function renderCart(){
-  const list = document.getElementById('cart-list');
-  if(cart.length===0){ list.innerHTML = '<small>Seu carrinho está vazio.</small>'; document.getElementById('cart-count').textContent='0'; document.getElementById('cart-total').textContent='0.00'; return}
-  document.getElementById('cart-count').textContent = cart.reduce((s,i)=>s+i.qty,0);
-  let html=''; cart.forEach(it=>{
-    html+=`<div class="cart-item"><div><strong>${it.name}</strong><div style="font-size:13px">${it.qty} x R$ ${currency(it.price)}</div></div><div style="text-align:right"><div>R$ ${currency(it.qty*it.price)}</div><div style="margin-top:6px"><button onclick="changeQty(${it.id},1)">+</button><button onclick="changeQty(${it.id},-1)">-</button><button onclick="removeItem(${it.id})">Rem</button></div></div></div>`
-  });
-  list.innerHTML = html;
-  document.getElementById('cart-total').textContent = currency(cart.reduce((s,i)=>s+i.qty*i.price,0));
-}
-
-function changeQty(id,delta){ const item = cart.find(i=>i.id===id); if(!item) return; item.qty += delta; if(item.qty<=0) cart = cart.filter(i=>i.id!==id); syncCart(); renderCart(); }
-function removeItem(id){ cart = cart.filter(i=>i.id!==id); syncCart(); renderCart(); }
-function clearCart(){ cart=[]; syncCart(); renderCart(); }
-function syncCart(){ localStorage.setItem(KEY_CART, JSON.stringify(cart)); }
-
-// ----- Checkout flow -----
-document.getElementById('btn-checkout').addEventListener('click', ()=>{
-  if(cart.length===0) return alert('Carrinho vazio.');
-  if(!user){ alert('Faça o cadastro antes de finalizar.'); document.getElementById('open-cadastro').click(); return }
-  const pm = prompt('Forma de pagamento: digite 1-Cartão,2-PIX,3-Boleto,4-Dinheiro (ex:1)');
-  const map = { '1':'Cartão','2':'PIX','3':'Boleto','4':'Dinheiro' };
-  const method = map[pm]||'Outro';
-  const total = cart.reduce((s,i)=>s+i.qty*i.price,0);
-  const confirmMsg = `Confirmar venda para ${user.nome} — total R$ ${currency(total)} — pagamento: ${method}? (OK para confirmar)`;
-  if(!confirm(confirmMsg)) return;
-  const sale = { id: 'S' + (sales.length+1), user: user, items: cart.slice(), total: total, payment: method, date: now() };
-  sales.push(sale); localStorage.setItem(KEY_SALES, JSON.stringify(sales));
-  clearCart(); alert('Venda registrada!'); renderReport();
+btnLogin.addEventListener('click', ()=> showView('login'));
+btnLogout.addEventListener('click', ()=> {
+  STORAGE.setUser(null);
+  refreshAuthUI();
+  showView('login');
 });
 
-document.getElementById('btn-clear').addEventListener('click', ()=>{ if
+/* Handle login form */
+loginForm.addEventListener('submit', (ev)=>{
+  ev.preventDefault();
+  const user = document.getElementById('input-user').value.trim();
+  const pass = document.getElementById('input-pass').value.trim();
+  if(!user || !pass){ alert('Preencha usuário e senha'); return; }
+  STORAGE.setUser({ username: user });
+  refreshAuthUI();
+  navigateTo('home');
+  loginForm.reset();
+});
+
+/* ---------------------------
+   Products / Catalog
+   --------------------------- */
+function renderProducts(filter = ''){
+  productsEl.innerHTML = '';
+  const list = PRODUCTS.filter(p => p.nome.toLowerCase().includes(filter.toLowerCase()));
+  list.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'product';
+    div.innerHTML = `
+      <img src="${p.img}" alt="${p.nome}" />
+      <div class="product-info">
+        <div><strong>${p.nome}</strong></div>
+        <div class="price">R$${p.preco.toFixed(2)}</div>
+      </div>
+      <button class="btn add-btn">Adicionar</button>
+    `;
+    div.querySelector('.add-btn').addEventListener('click', ()=> addToCart(p.id));
+    productsEl.appendChild(div);
+  });
+}
+searchInput.addEventListener('input', ()=> renderProducts(searchInput.value));
+
+/* ---------------------------
+   Cart functions
+   --------------------------- */
+function getCart(){ return STORAGE.getCart(); }
+function setCart(c){ STORAGE.setCart(c); updateCartCount(); }
+function addToCart(productId){
+  const p = PRODUCTS.find(x=>x.id===productId);
+  if(!p) return;
+  const cart = getCart();
+  const found = cart.find(i => i.id === p.id);
+  if(found) found.qty += 1;
+  else cart.push({ id: p.id, nome: p.nome, preco: p.preco, qty: 1 });
+  setCart(cart);
+  if(!views.catalog.hidden) renderProducts(searchInput.value);
+  updateCartCount();
+}
+function removeFromCart(productId){
+  let cart = getCart();
+  cart = cart.filter(i => i.id !== productId);
+  setCart(cart);
+}
+function clearCart(){ setCart([]); renderCart(); }
+
+/* Render cart */
+function renderCart(){
+  const cart = getCart();
+  cartListEl.innerHTML = '';
+  if(cart.length === 0){
+    cartListEl.innerHTML = '<p>O carrinho está vazio.</p>';
+    cartTotalEl.textContent = 'R$0';
+    return;
+  }
+  const ul = document.createElement('div');
+  cart.forEach(item => {
+    const itemEl = document.createElement('div');
+    itemEl.className = 'cart-item';
+    itemEl.innerHTML = `
+      <div><strong>${item.nome}</strong> (x${item.qty})</div>
+      <div>R$${(item.preco * item.qty).toFixed(2)} <button class="link-btn rem">Remover</button></div>
+    `;
+    itemEl.querySelector('.rem').addEventListener('click', ()=> {
+      if(confirm('Remover item do carrinho?')){
+        removeFromCart(item.id);
+        renderCart();
+      }
+    });
+    ul.appendChild(itemEl);
+  });
+  cartListEl.appendChild(ul);
+  const total = cart.reduce((s,i)=>s + i.preco * i.qty, 0);
+  cartTotalEl.textContent = `R$${total.toFixed(2)}`;
+}
+
+/* Cart count in nav */
+function updateCartCount(){
+  const cart = getCart();
+  const qty = cart.reduce((s,i)=>s+i.qty,0);
+  cartCountEl.textContent = qty;
+}
+
+/* Clear & Checkout */
+btnClear.addEventListener('click', ()=> {
+  if(confirm('Limpar carrinho?')){ clearCart(); }
+});
+btnCheckout.addEventListener('click', ()=> {
+  const cart = getCart();
+  if(cart.length === 0){ alert('Carrinho vazio'); return; }
+  const total = cart.reduce((s,i)=>s + i.preco * i.qty, 0);
+  // create order
+  const order = {
+    id: Date.now().toString(),
+    items: cart,
+    total,
+    date: new Date().toISOString(),
+    status: 'Pendente'
+  };
+  const orders = STORAGE.getOrders();
+  orders.unshift(order);
+  STORAGE.setOrders(orders);
+  clearCart();
+  alert(`Pedido gerado (ID: ${order.id}) — Total R$${order.total.toFixed(2)}`);
+  navigateTo('orders');
+});
+
+/* ---------------------------
+   Orders
+   --------------------------- */
+function renderOrders(){
+  const orders = STORAGE.getOrders();
+  ordersListEl.innerHTML = '';
+  if(orders.length === 0){ ordersListEl.innerHTML = '<p>Nenhum pedido registrado.</p>'; return; }
+  orders.forEach(o => {
+    const div = document.createElement('div');
+    div.className = 'order';
+    div.innerHTML = `
+      <div><strong>ID:</strong> ${o.id}</div>
+      <div><strong>Data:</strong> ${new Date(o.date).toLocaleString()}</div>
+      <div><strong>Status:</strong> ${o.status}</div>
+      <div><strong>Total:</strong> R$${o.total.toFixed(2)}</div>
+      <details style="margin-top:6px"><summary>Itens (${o.items.length})</summary>
+        <ul>${o.items.map(it=>`<li>${it.nome} x${it.qty} — R$${(it.preco*it.qty).toFixed(2)}</li>`).join('')}</ul>
+      </details>
+    `;
+    ordersListEl.appendChild(div);
+  });
+}
+
+/* ---------------------------
+   Reports (simple)
+   --------------------------- */
+function renderReports(){
+  const orders = STORAGE.getOrders();
+  const totalVendas = orders.reduce((s,o)=>s + o.total, 0);
+  reportTotalEl.textContent = `R$${totalVendas.toFixed(2)}`;
+  reportCountEl.textContent = orders.length;
+  renderChart(orders);
+}
+
+/* Simple bar chart plotting product totals across recent orders */
+function renderChart(orders){
+  const ctx = chartCanvas.getContext('2d');
+  // aggregate sales per product
+  const sums = {};
+  orders.slice(0,50).forEach(o => {
+    o.items.forEach(it => {
+      if(!sums[it.nome]) sums[it.nome] = 0;
+      sums[it.nome] += it.preco * it.qty;
+    });
+  });
+  const labels = Object.keys(sums);
+  const values = labels.map(l => sums[l]);
+
+  // clear
+  ctx.clearRect(0,0,chartCanvas.width,chartCanvas.height);
+  if(values.length === 0){
+    ctx.fillStyle = '#666';
+    ctx.font = '14px sans-serif';
+    ctx.fillText('Sem dados de vendas ainda.', 10, 24);
+    return;
+  }
+
+  // simple bar drawing
+  const padding = 40;
+  const w = chartCanvas.width;
+  const h = chartCanvas.height;
+  const max = Math.max(...values);
+  const barWidth = (w - padding*2) / values.length * 0.7;
+  const gap = ((w - padding*2) / values.length) - barWidth;
+
+  // y-axis lines
+  ctx.strokeStyle = '#e6efe8';
+  ctx.lineWidth = 1;
+  for(let i=0;i<=4;i++){
+    const y = padding + (h - padding*2) * (i/4);
+    ctx.beginPath();
+    ctx.moveTo(padding, y);
+    ctx.lineTo(w-padding, y);
+    ctx.stroke();
+  }
+
+  // draw bars
+  labels.forEach((lab, idx) => {
+    const val = values[idx];
+    const x = padding + idx * (barWidth + gap) + gap/2;
+    const heightPct = val / max;
+    const barH = (h - padding*2) * heightPct;
+    const y = h - padding - barH;
+
+    // bar
+    ctx.fillStyle = '#2E7D32';
+    ctx.fillRect(x, y, barWidth, barH);
+
+    // label
+    ctx.fillStyle = '#234d22';
+    ctx.font = '12px sans-serif';
+    const text = lab.length > 12 ? lab.slice(0,12)+'…' : lab;
+    ctx.fillText(text, x, h - padding + 14);
+    // value
+    ctx.fillStyle = '#333';
+    ctx.font = '11px sans-serif';
+    ctx.fillText(`R$${val.toFixed(0)}`, x, y - 6);
+  });
+}
+
+/* ---------------------------
+   Init
+   --------------------------- */
+function init(){
+  refreshAuthUI();
+  updateCartCount();
+  // show home if logged, else login
+  const user = STORAGE.getUser();
+  if(user) navigateTo('home');
+  else showView('login');
+  // pre-render products
+  renderProducts();
+}
+init();
