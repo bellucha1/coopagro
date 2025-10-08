@@ -1,14 +1,30 @@
-/* === ESTILOS GERAIS === */
-* { box-sizing: border-box; margin: 0; padding: 0; }
+/* ==========================
+   ESTILOS GERAIS
+========================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: "Poppins", sans-serif;
   background: linear-gradient(135deg, #e8f5e9, #a5d6a7);
   color: #2e7d32;
   transition: background 0.5s, color 0.5s;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
-.hidden { display: none; }
 
-/* === HEADER === */
+/* Ocultar seções */
+.hidden {
+  display: none;
+}
+
+/* ==========================
+   CABEÇALHO
+========================== */
 header {
   background: #2e7d32;
   color: white;
@@ -19,6 +35,11 @@ header {
   align-items: center;
   flex-wrap: wrap;
 }
+
+header h1 {
+  font-size: 1.6rem;
+}
+
 #modo-btn {
   background: white;
   color: #2e7d32;
@@ -29,16 +50,29 @@ header {
   font-weight: bold;
   transition: all 0.3s;
 }
-#modo-btn:hover { background: #c8e6c9; transform: scale(1.05); }
 
-/* === NAV === */
+#modo-btn:hover {
+  background: #c8e6c9;
+  transform: scale(1.05);
+}
+
+/* ==========================
+   MENU DE NAVEGAÇÃO
+========================== */
 nav {
   background: #388e3c;
   display: flex;
   justify-content: center;
   padding: 0.6rem;
 }
-nav ul { list-style: none; display: flex; flex-wrap: wrap; gap: 15px; }
+
+nav ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
 nav button {
   background: white;
   color: #2e7d32;
@@ -49,24 +83,63 @@ nav button {
   font-weight: bold;
   transition: all 0.3s;
 }
-nav button:hover { background: #c8e6c9; transform: scale(1.05); }
 
-/* === PRODUTOS === */
+nav button:hover {
+  background: #c8e6c9;
+  transform: scale(1.05);
+}
+
+/* ==========================
+   SEÇÕES PRINCIPAIS
+========================== */
+main {
+  flex: 1;
+  padding: 20px;
+  text-align: center;
+}
+
+section {
+  margin-top: 20px;
+}
+
+h2 {
+  margin-bottom: 10px;
+  color: #1b5e20;
+}
+
+/* ==========================
+   CATÁLOGO DE PRODUTOS
+========================== */
 .catalogo {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 20px;
   margin-top: 20px;
 }
+
 .produto {
   background: white;
   border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   padding: 15px;
   transition: transform 0.3s, box-shadow 0.3s;
 }
-.produto:hover { transform: scale(1.05); }
-.produto img { width: 100%; height: 150px; border-radius: 10px; object-fit: cover; }
+
+.produto:hover {
+  transform: scale(1.05);
+}
+
+.produto img {
+  width: 100%;
+  height: 150px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.produto h3 {
+  margin-top: 10px;
+}
+
 .produto button {
   background: #2e7d32;
   color: white;
@@ -78,17 +151,23 @@ nav button:hover { background: #c8e6c9; transform: scale(1.05); }
   cursor: pointer;
   transition: 0.3s;
 }
-.produto button:hover { background: #43a047; }
 
-/* === CARRINHO === */
+.produto button:hover {
+  background: #43a047;
+}
+
+/* ==========================
+   CARRINHO DE COMPRAS
+========================== */
 #carrinho-lista {
   background: #ffffffcc;
   padding: 20px;
   border-radius: 12px;
   margin: 20px auto;
   max-width: 600px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
+
 .item-carrinho {
   display: flex;
   justify-content: space-between;
@@ -98,6 +177,7 @@ nav button:hover { background: #c8e6c9; transform: scale(1.05); }
   border-radius: 6px;
   margin-bottom: 10px;
 }
+
 .item-carrinho button {
   background: none;
   border: none;
@@ -105,6 +185,7 @@ nav button:hover { background: #c8e6c9; transform: scale(1.05); }
   color: #d32f2f;
   cursor: pointer;
 }
+
 #finalizar {
   background: #2e7d32;
   color: white;
@@ -114,26 +195,44 @@ nav button:hover { background: #c8e6c9; transform: scale(1.05); }
   cursor: pointer;
   font-size: 1.1rem;
   margin-top: 10px;
+  transition: 0.3s;
 }
-#finalizar:hover { background: #43a047; }
 
-/* === MODAL === */
+#finalizar:hover {
+  background: #43a047;
+}
+
+/* ==========================
+   MODAL DE PAGAMENTO
+========================== */
 .modal {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1000;
 }
+
 .modal-content {
   background: white;
   padding: 25px;
   border-radius: 12px;
   text-align: center;
+  width: 90%;
   max-width: 320px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
+
+.modal-content h3 {
+  margin-bottom: 10px;
+  color: #2e7d32;
+}
+
 .pagamento {
   background: #2e7d32;
   color: white;
@@ -144,8 +243,13 @@ nav button:hover { background: #c8e6c9; transform: scale(1.05); }
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
+  transition: 0.3s;
 }
-.pagamento:hover { background: #43a047; }
+
+.pagamento:hover {
+  background: #43a047;
+}
+
 .fechar {
   background: #ccc;
   color: black;
@@ -154,14 +258,50 @@ nav button:hover { background: #c8e6c9; transform: scale(1.05); }
   border-radius: 8px;
   cursor: pointer;
   margin-top: 10px;
+  transition: 0.3s;
 }
 
-/* === RODAPÉ === */
+.fechar:hover {
+  background: #bbb;
+}
+
+/* ==========================
+   RODAPÉ
+========================== */
 footer {
   text-align: center;
   background: #2e7d32;
   color: white;
   padding: 15px;
-  margin-top: 30px;
+  margin-top: auto;
 }
 
+/* ==========================
+   MODO ESCURO
+========================== */
+body.dark {
+  background: linear-gradient(135deg, #263238, #37474f);
+  color: #ffffff;
+}
+
+body.dark header {
+  background: #1b5e20;
+}
+
+body.dark nav {
+  background: #33691e;
+}
+
+body.dark .produto {
+  background: #424242;
+  color: #ffffff;
+}
+
+body.dark #carrinho-lista {
+  background: #455a64;
+  color: white;
+}
+
+body.dark footer {
+  background: #1b5e20;
+}
