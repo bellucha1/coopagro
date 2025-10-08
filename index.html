@@ -7,13 +7,16 @@
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
+  <!-- HEADER -->
   <header>
     <h1>🌿 Cooperativa Verde</h1>
-    <button id="modo-btn">🌙 Modo Escuro</button>
+    <button id="modo-btn" aria-label="Alternar modo escuro">🌙 Modo Escuro</button>
   </header>
 
-  <nav>
+  <!-- NAV -->
+  <nav aria-label="Menu principal">
     <ul>
       <li><button onclick="mostrarSecao('home')">Início</button></li>
       <li><button onclick="mostrarSecao('produtos')">Produtos</button></li>
@@ -22,43 +25,50 @@
     </ul>
   </nav>
 
+  <!-- MAIN -->
   <main>
     <!-- HOME -->
     <section id="home">
       <h2>Bem-vindo à Cooperativa Verde!</h2>
       <p>Promovendo sustentabilidade, agricultura familiar e economia local 🌾</p>
-      <img src="https://cdn-icons-png.flaticon.com/512/2903/2903488.png" alt="logo" />
+      <img 
+        src="https://cdn-icons-png.flaticon.com/512/2903/2903488.png" 
+        alt="Ícone representando a agricultura sustentável"
+        width="200"
+        height="200"
+      />
     </section>
 
     <!-- PRODUTOS -->
-    <section id="produtos" class="hidden">
+    <section id="produtos" class="hidden" aria-label="Catálogo de produtos">
       <h2>Nossos Produtos</h2>
-      <div class="catalogo" id="catalogo"></div>
+      <div id="catalogo" class="catalogo" role="list"></div>
     </section>
 
     <!-- CARRINHO -->
-    <section id="carrinho" class="hidden">
+    <section id="carrinho" class="hidden" aria-label="Carrinho de compras">
       <h2>🛒 Seu Carrinho</h2>
       <div id="carrinho-lista"></div>
-      <p id="total"></p>
+      <p id="total">Total: R$ 0,00</p>
       <button id="finalizar">💳 Finalizar Compra</button>
     </section>
 
     <!-- RELATÓRIOS -->
-    <section id="relatorios" class="hidden">
+    <section id="relatorios" class="hidden" aria-label="Relatório de vendas">
       <h2>📈 Relatório de Vendas</h2>
       <canvas id="graficoVendas"></canvas>
     </section>
   </main>
 
+  <!-- FOOTER -->
   <footer>
     <p>© 2025 Cooperativa Verde — Agricultura Sustentável</p>
   </footer>
 
   <!-- MODAL DE PAGAMENTO -->
-  <div id="modal" class="modal hidden">
+  <div id="modal" class="modal hidden" role="dialog" aria-labelledby="titulo-modal" aria-hidden="true">
     <div class="modal-content">
-      <h3>Escolha a forma de pagamento</h3>
+      <h3 id="titulo-modal">Escolha a forma de pagamento</h3>
       <button class="pagamento" onclick="finalizarPagamento('Pix')">💚 Pix</button>
       <button class="pagamento" onclick="finalizarPagamento('Cartão')">💳 Cartão</button>
       <button class="pagamento" onclick="finalizarPagamento('Boleto')">📄 Boleto</button>
@@ -66,6 +76,8 @@
     </div>
   </div>
 
+  <!-- SCRIPT -->
   <script src="script.js"></script>
 </body>
 </html>
+
