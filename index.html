@@ -1,83 +1,115 @@
-<!DOCTYPE html>
+// index.html
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cooperativa Verde</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cooperativa de Insumos — Loja</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <body>
-  <!-- HEADER -->
   <header>
-    <h1>🌿 Cooperativa Verde</h1>
-    <button id="modo-btn" aria-label="Alternar modo escuro">🌙 Modo Escuro</button>
+    <div class="brand">
+      <div class="logo" aria-hidden>
+        <svg width="40" height="40" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="10" fill="#133d1c"/><path d="M14 44h36v6H14z" fill="#9ad08f"/><circle cx="20" cy="50" r="6" fill="#0f6f2c"/><circle cx="44" cy="50" r="6" fill="#0f6f2c"/></svg>
+      </div>
+      <div>
+        <h1>Cooperativa de Insumos — Loja</h1>
+        <div style="font-size:12px;opacity:.95">Produtos agro & Insumos — Vendas e Relatórios</div>
+      </div>
+    </div>
+    <nav>
+      <button id="open-cart">Carrinho (<span id="cart-count">0</span>)</button>
+      <button id="open-cadastro">Cadastro</button>
+      <button id="open-relatorio">Relatório Semanal</button>
+    </nav>
   </header>
 
-  <!-- NAV -->
-  <nav aria-label="Menu principal">
-    <ul>
-      <li><button onclick="mostrarSecao('index.html')">Início</button></li>
-      <li><button onclick="mostrarSecao('produtos')">Produtos</button></li>
-      <li><button onclick="mostrarSecao('carrinho')">Carrinho</button></li>
-      <li><button onclick="mostrarSecao('relatorios')">Relatórios</button></li>
-    </ul>
-  </nav>
+  <section class="hero">
+    <div class="hero-card">
+      <div class="hero-top">
+        <div style="flex:1">
+          <h2 style="color:#0b3f19">Bem-vindo à cooperativa</h2>
+          <p style="margin-top:6px">Compre insumos com preços cooperativos. Use o carrinho para adicionar produtos e gerar vendas. Pagamentos: Cartão, PIX, Boleto, Dinheiro. Cadastro simples para emitir relatórios.</p>
+          <div class="controls">
+            <button onclick="scrollToCatalog()">Ver Catálogo</button>
+            <button onclick="document.getElementById('open-cadastro').click()">Fazer Cadastro</button>
+          </div>
+        </div>
 
-  <!-- MAIN -->
+        <div class="tractor-wrap" aria-hidden>
+          <svg class="tractor" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Trator">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#0f6f2c"/><stop offset="1" stop-color="#138a3a"/></linearGradient>
+            </defs>
+            <g transform="translate(0,40)">
+              <rect x="40" y="120" width="420" height="120" rx="20" fill="url(#g1)"/>
+              <rect x="460" y="140" width="80" height="80" rx="10" fill="#0f6f2c"/>
+              <circle cx="140" cy="280" r="60" fill="#082b12"/>
+              <circle cx="480" cy="300" r="80" fill="#082b12"/>
+              <circle cx="140" cy="280" r="40" fill="#9ad08f"/>
+              <circle cx="480" cy="300" r="55" fill="#9ad08f"/>
+              <rect x="120" y="90" width="140" height="50" rx="12" fill="#0f6f2c"/>
+              <text x="80" y="150" fill="#ffffff" font-size="24" font-family="sans-serif">Trator Cooperativo</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
+        <strong>Promoção desta semana:</strong>
+        <div id="promo" style="background:#def7df;padding:8px;border-radius:8px">Compre 10 sacos de adubo e ganhe 5% off</div>
+      </div>
+    </div>
+  </section>
+
   <main>
-    <!-- HOME -->
-    <section id="home">
-      <h2>Bem-vindo à Cooperativa Verde!</h2>
-      <p>Promovendo sustentabilidade, agricultura familiar e economia local 🌾</p>
-      <img 
-        src="https://cdn-icons-png.flaticon.com/512/2903/2903488.png" 
-        alt="Ícone representando a agricultura sustentável"
-        width="200"
-        height="200"
-      />
-    </section>
+    <div class="grid">
+      <section class="catalog">
+        <h2>Catálogo de Produtos</h2>
+        <div style="font-size:13px; color:#355d3a; margin-bottom:10px">30 produtos disponíveis</div>
+        <div class="products" id="products"></div>
+      </section>
 
-    <!-- PRODUTOS -->
-    <section id="produtos" class="hidden" aria-label="Catálogo de produtos">
-      <h2>Nossos Produtos</h2>
-      <div id="catalogo" class="catalogo" role="list"></div>
-    </section>
+      <aside class="sidebar">
+        <h2>Carrinho</h2>
+        <div class="cart-list" id="cart-list"><small>Seu carrinho está vazio.</small></div>
+        <div style="margin-top:8px">
+          <div><strong>Total:</strong> R$ <span id="cart-total">0.00</span></div>
+          <div class="actions">
+            <button id="btn-checkout">Finalizar Compra</button>
+            <button id="btn-clear">Limpar</button>
+          </div>
+        </div>
 
-    <!-- CARRINHO -->
-    <section id="carrinho" class="hidden" aria-label="Carrinho de compras">
-      <h2>🛒 Seu Carrinho</h2>
-      <div id="carrinho-lista"></div>
-      <p id="total">Total: R$ 0,00</p>
-      <button id="finalizar">💳 Finalizar Compra</button>
-    </section>
+        <hr style="margin:12px 0" />
 
-    <!-- RELATÓRIOS -->
-    <section id="relatorios" class="hidden" aria-label="Relatório de vendas">
-      <h2>📈 Relatório de Vendas</h2>
-      <canvas id="graficoVendas"></canvas>
+        <h2>Cadastro</h2>
+        <form id="cadastro-form">
+          <label>Nome completo<input required id="nome" placeholder="Nome" /></label>
+          <label>Email<input required id="email" placeholder="email@exemplo.com" type="email" /></label>
+          <label>Endereço<textarea id="endereco" rows="2" placeholder="Rua, número, cidade"></textarea></label>
+          <div class="actions"><button type="submit">Salvar</button></div>
+        </form>
+      </aside>
+    </div>
+
+    <section style="margin-top:20px; background:#fff; padding:12px; border-radius:12px">
+      <h2>Relatório Semanal de Vendas</h2>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+        <label>Mostrar últimos <select id="rel-days"><option value="7">7 dias</option><option value="14">14 dias</option><option value="30">30 dias</option></select></label>
+        <button id="refresh-report">Gerar Relatório</button>
+        <button id="export-csv">Exportar CSV</button>
+      </div>
+      <div id="report-summary" style="margin-top:10px"></div>
+      <div id="report-table"></div>
     </section>
   </main>
 
-  <!-- FOOTER -->
   <footer>
-    <p>© 2025 Cooperativa Verde — Agricultura Sustentável</p>
+    <small>Feito para GitHub Pages — Cooperativa Local · © <span id="year"></span></small>
   </footer>
 
-  <!-- MODAL DE PAGAMENTO -->
-  <div id="modal" class="modal hidden" role="dialog" aria-labelledby="titulo-modal" aria-hidden="true">
-    <div class="modal-content">
-      <h3 id="titulo-modal">Escolha a forma de pagamento</h3>
-      <button class="pagamento" onclick="finalizarPagamento('Pix')">💚 Pix</button>
-      <button class="pagamento" onclick="finalizarPagamento('Cartão')">💳 Cartão</button>
-      <button class="pagamento" onclick="finalizarPagamento('Boleto')">📄 Boleto</button>
-      <button class="fechar" onclick="fecharModal()">Fechar</button>
-    </div>
-  </div>
-
-  <!-- SCRIPT -->
-  <script src="script.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
-
