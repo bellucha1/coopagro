@@ -10,45 +10,53 @@
 <body>
   <header>
     <h1>🌾 Cooperativa de Insumos</h1>
-    <button id="modo-btn">🌙 Modo Escuro</button>
+    <button id="modo-btn" aria-label="Alternar modo escuro">🌙 Modo Escuro</button>
   </header>
 
-  <nav>
-    <button onclick="mostrar('home')">Início</button>
-    <button onclick="mostrar('catalogo')">Catálogo</button>
-    <button onclick="mostrar('carrinho')">Carrinho</button>
-    <button onclick="mostrar('relatorios')">Relatórios</button>
+  <nav aria-label="Menu principal">
+    <ul>
+      <li><button onclick="mostrar('home')">Início</button></li>
+      <li><button onclick="mostrar('catalogo')">Catálogo</button></li>
+      <li><button onclick="mostrar('carrinho')">Carrinho</button></li>
+      <li><button onclick="mostrar('relatorios')">Relatórios</button></li>
+    </ul>
   </nav>
 
   <main>
+    <!-- Início -->
     <section id="home">
       <h2>Bem-vindo à sua Cooperativa!</h2>
-      <p>Gerencie seus insumos e pedidos de forma prática e interativa.</p>
-      <img src="https://img.icons8.com/fluency/240/tractor.png" alt="Trator">
+      <p>Gerencie seus insumos, pedidos e relatórios de forma prática e interativa.</p>
+      <figure>
+        <img src="https://img.icons8.com/fluency/240/tractor.png" alt="Ilustração de um trator representando o trabalho agrícola">
+        <figcaption>Seu trabalho, mais simples e organizado</figcaption>
+      </figure>
     </section>
 
-    <section id="catalogo" class="hidden">
+    <!-- Catálogo -->
+    <section id="catalogo" class="hidden" aria-label="Catálogo de insumos">
       <h2>Catálogo de Insumos</h2>
-      <div class="catalogo" id="catalogo-lista"></div>
+      <div class="catalogo" id="catalogo-lista" role="list"></div>
     </section>
 
-    <section id="carrinho" class="hidden">
+    <!-- Carrinho -->
+    <section id="carrinho" class="hidden" aria-label="Carrinho de compras">
       <h2>🛒 Seu Carrinho</h2>
       <div id="carrinho-lista"></div>
-      <h3 id="total"></h3>
+      <h3 id="total">Total: R$ 0</h3>
     </section>
 
-    <section id="relatorios" class="hidden">
-      <h2>📊 Relatório de Vendas</h2>
-      <canvas id="graficoVendas"></canvas>
+    <!-- Relatórios -->
+    <section id="relatorios" class="hidden" aria-label="Relatórios de vendas">
+      <h2>📊 Relatórios de Vendas</h2>
+      <canvas id="graficoVendas" aria-label="Gráfico de vendas mensais" role="img"></canvas>
     </section>
   </main>
 
   <footer>
-    <p>© 2025 Cooperativa Verde Sustentável</p>
+    <p>© 2025 Cooperativa Verde Sustentável — Todos os direitos reservados</p>
   </footer>
 
   <script src="script.js"></script>
 </body>
 </html>
-
