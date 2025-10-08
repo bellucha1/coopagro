@@ -1,61 +1,70 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cooperativa de Insumos</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cooperativa Verde</title>
+  <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <header>
-    <h1>🌾 Cooperativa de Insumos</h1>
-    <button id="modo-btn" aria-label="Alternar modo escuro">🌙 Modo Escuro</button>
+    <h1>🌿 Cooperativa Verde</h1>
+    <button id="modo-btn">🌙 Modo Escuro</button>
   </header>
 
-  <nav aria-label="Menu principal">
+  <nav>
     <ul>
-      <li><button onclick="mostrar('home')">Início</button></li>
-      <li><button onclick="mostrar('catalogo')">Catálogo</button></li>
-      <li><button onclick="mostrar('carrinho')">Carrinho</button></li>
-      <li><button onclick="mostrar('relatorios')">Relatórios</button></li>
+      <li><button onclick="mostrarSecao('home')">Início</button></li>
+      <li><button onclick="mostrarSecao('produtos')">Produtos</button></li>
+      <li><button onclick="mostrarSecao('carrinho')">Carrinho</button></li>
+      <li><button onclick="mostrarSecao('relatorios')">Relatórios</button></li>
     </ul>
   </nav>
 
   <main>
-    <!-- Início -->
+    <!-- HOME -->
     <section id="home">
-      <h2>Bem-vindo à sua Cooperativa!</h2>
-      <p>Gerencie seus insumos, pedidos e relatórios de forma prática e interativa.</p>
-      <figure>
-        <img src="https://img.icons8.com/fluency/240/tractor.png" alt="Ilustração de um trator representando o trabalho agrícola">
-        <figcaption>Seu trabalho, mais simples e organizado</figcaption>
-      </figure>
+      <h2>Bem-vindo à Cooperativa Verde!</h2>
+      <p>Promovendo sustentabilidade, agricultura familiar e economia local 🌾</p>
+      <img src="https://cdn-icons-png.flaticon.com/512/2903/2903488.png" alt="logo" />
     </section>
 
-    <!-- Catálogo -->
-    <section id="catalogo" class="hidden" aria-label="Catálogo de insumos">
-      <h2>Catálogo de Insumos</h2>
-      <div class="catalogo" id="catalogo-lista" role="list"></div>
+    <!-- PRODUTOS -->
+    <section id="produtos" class="hidden">
+      <h2>Nossos Produtos</h2>
+      <div class="catalogo" id="catalogo"></div>
     </section>
 
-    <!-- Carrinho -->
-    <section id="carrinho" class="hidden" aria-label="Carrinho de compras">
+    <!-- CARRINHO -->
+    <section id="carrinho" class="hidden">
       <h2>🛒 Seu Carrinho</h2>
       <div id="carrinho-lista"></div>
-      <h3 id="total">Total: R$ 0</h3>
+      <p id="total"></p>
+      <button id="finalizar">💳 Finalizar Compra</button>
     </section>
 
-    <!-- Relatórios -->
-    <section id="relatorios" class="hidden" aria-label="Relatórios de vendas">
-      <h2>📊 Relatórios de Vendas</h2>
-      <canvas id="graficoVendas" aria-label="Gráfico de vendas mensais" role="img"></canvas>
+    <!-- RELATÓRIOS -->
+    <section id="relatorios" class="hidden">
+      <h2>📈 Relatório de Vendas</h2>
+      <canvas id="graficoVendas"></canvas>
     </section>
   </main>
 
   <footer>
-    <p>© 2025 Cooperativa Verde Sustentável — Todos os direitos reservados</p>
+    <p>© 2025 Cooperativa Verde — Agricultura Sustentável</p>
   </footer>
+
+  <!-- MODAL DE PAGAMENTO -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Escolha a forma de pagamento</h3>
+      <button class="pagamento" onclick="finalizarPagamento('Pix')">💚 Pix</button>
+      <button class="pagamento" onclick="finalizarPagamento('Cartão')">💳 Cartão</button>
+      <button class="pagamento" onclick="finalizarPagamento('Boleto')">📄 Boleto</button>
+      <button class="fechar" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
