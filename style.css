@@ -1,307 +1,246 @@
-/* ==========================
-   ESTILOS GERAIS
-========================== */
+/* ======== RESET ======== */
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
 
+/* ======== BODY ======== */
 body {
-  font-family: "Poppins", sans-serif;
-  background: linear-gradient(135deg, #e8f5e9, #a5d6a7);
-  color: #2e7d32;
-  transition: background 0.5s, color 0.5s;
+  background-color: #f4fdf4;
+  color: #333;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* Ocultar seções */
-.hidden {
-  display: none;
-}
-
-/* ==========================
-   CABEÇALHO
-========================== */
+/* ======== HEADER ======== */
 header {
-  background: #2e7d32;
+  background-color: #3a9c47;
   color: white;
   text-align: center;
-  padding: 1.2rem;
+  padding: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
 }
 
 header h1 {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
 }
 
 #modo-btn {
-  background: white;
-  color: #2e7d32;
+  background-color: #fff;
+  color: #3a9c47;
   border: none;
-  padding: 10px 15px;
+  padding: 8px 14px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
-  transition: all 0.3s;
+  transition: 0.3s;
 }
 
 #modo-btn:hover {
-  background: #c8e6c9;
-  transform: scale(1.05);
+  background-color: #2e7d34;
+  color: white;
 }
 
-/* ==========================
-   MENU DE NAVEGAÇÃO
-========================== */
+/* ======== NAV ======== */
 nav {
-  background: #388e3c;
-  display: flex;
-  justify-content: center;
-  padding: 0.6rem;
+  background-color: #eaf7ea;
+  border-bottom: 2px solid #d0ebd0;
 }
 
 nav ul {
   list-style: none;
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 15px;
+}
+
+nav li {
+  margin: 8px;
 }
 
 nav button {
-  background: white;
-  color: #2e7d32;
+  background-color: #3a9c47;
+  color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 10px 16px;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
-  transition: all 0.3s;
+  transition: background 0.3s ease;
 }
 
 nav button:hover {
-  background: #c8e6c9;
-  transform: scale(1.05);
+  background-color: #2d7734;
 }
 
-/* ==========================
-   SEÇÕES PRINCIPAIS
-========================== */
+/* ======== MAIN ======== */
 main {
   flex: 1;
   padding: 20px;
   text-align: center;
 }
 
-section {
+/* ======== SECTIONS ======== */
+.hidden {
+  display: none;
+}
+
+/* ======== HOME ======== */
+#home {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+#home img {
+  width: 250px;
   margin-top: 20px;
 }
 
-h2 {
-  margin-bottom: 10px;
-  color: #1b5e20;
+/* imagem do trator restaurada */
+#home img {
+  content: url("https://cdn-icons-png.flaticon.com/512/616/616408.png");
 }
 
-/* ==========================
-   CATÁLOGO DE PRODUTOS
-========================== */
+/* ======== CATALOGO ======== */
 .catalogo {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 20px;
-  margin-top: 20px;
 }
 
 .produto {
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background-color: #ffffff;
+  border: 2px solid #d0ebd0;
+  border-radius: 10px;
   padding: 15px;
-  transition: transform 0.3s, box-shadow 0.3s;
+  width: 180px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .produto:hover {
   transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .produto img {
   width: 100%;
-  height: 150px;
-  border-radius: 10px;
-  object-fit: cover;
-}
-
-.produto h3 {
-  margin-top: 10px;
+  height: 120px;
+  object-fit: contain;
 }
 
 .produto button {
-  background: #2e7d32;
+  margin-top: 8px;
+  background-color: #3a9c47;
   color: white;
   border: none;
-  padding: 10px;
-  width: 100%;
-  border-radius: 8px;
-  font-weight: bold;
+  padding: 8px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: background 0.3s;
 }
 
 .produto button:hover {
-  background: #43a047;
+  background-color: #2d7734;
 }
 
-/* ==========================
-   CARRINHO DE COMPRAS
-========================== */
+/* ======== CARRINHO ======== */
 #carrinho-lista {
-  background: #ffffffcc;
-  padding: 20px;
-  border-radius: 12px;
-  margin: 20px auto;
-  max-width: 600px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 15px;
 }
 
-.item-carrinho {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #f1f8e9;
-  padding: 10px;
-  border-radius: 6px;
-  margin-bottom: 10px;
-}
-
-.item-carrinho button {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  color: #d32f2f;
-  cursor: pointer;
-}
-
-#finalizar {
-  background: #2e7d32;
+#carrinho button {
+  background-color: #3a9c47;
   color: white;
   border: none;
-  padding: 12px 25px;
+  padding: 10px 14px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 1.1rem;
-  margin-top: 10px;
-  transition: 0.3s;
+  transition: background 0.3s;
 }
 
-#finalizar:hover {
-  background: #43a047;
+#carrinho button:hover {
+  background-color: #2e7d34;
 }
 
-/* ==========================
-   MODAL DE PAGAMENTO
-========================== */
+/* ======== MODAL ======== */
 .modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 10;
 }
 
 .modal-content {
-  background: white;
-  padding: 25px;
+  background-color: white;
+  padding: 30px;
   border-radius: 12px;
+  width: 300px;
   text-align: center;
-  width: 90%;
-  max-width: 320px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
-.modal-content h3 {
-  margin-bottom: 10px;
-  color: #2e7d32;
-}
-
-.pagamento {
-  background: #2e7d32;
+.modal-content button {
+  display: block;
+  margin: 10px auto;
+  padding: 10px 18px;
+  border: none;
+  background-color: #3a9c47;
   color: white;
-  border: none;
-  padding: 10px;
-  width: 100%;
-  margin: 8px 0;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
-  transition: 0.3s;
+  transition: background 0.3s;
 }
 
-.pagamento:hover {
-  background: #43a047;
+.modal-content button:hover {
+  background-color: #2e7d34;
 }
 
-.fechar {
-  background: #ccc;
-  color: black;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: 0.3s;
-}
-
-.fechar:hover {
-  background: #bbb;
-}
-
-/* ==========================
-   RODAPÉ
-========================== */
+/* ======== FOOTER ======== */
 footer {
-  text-align: center;
-  background: #2e7d32;
+  background-color: #3a9c47;
   color: white;
-  padding: 15px;
+  text-align: center;
+  padding: 10px;
   margin-top: auto;
 }
 
-/* ==========================
-   MODO ESCURO
-========================== */
+/* ======== DARK MODE ======== */
 body.dark {
-  background: linear-gradient(135deg, #263238, #37474f);
-  color: #ffffff;
+  background-color: #1a1a1a;
+  color: #e0e0e0;
 }
 
 body.dark header {
-  background: #1b5e20;
+  background-color: #2e7d34;
 }
 
 body.dark nav {
-  background: #33691e;
+  background-color: #252525;
 }
 
 body.dark .produto {
-  background: #424242;
-  color: #ffffff;
-}
-
-body.dark #carrinho-lista {
-  background: #455a64;
-  color: white;
+  background-color: #333;
+  color: #e0e0e0;
+  border-color: #3a9c47;
 }
 
 body.dark footer {
-  background: #1b5e20;
+  background-color: #2e7d34;
+}
+
+/* ======== ANIMAÇÃO ======== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
