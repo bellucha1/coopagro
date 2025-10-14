@@ -4,209 +4,262 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cooperativa de Insumos</title>
-<!-- Tailwind CSS CDN -->
-<script src="https://cdn.tailwindcss.com"></script>
-<!-- Chart.js Library -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    // Configuração do Tailwind CSS
-    tailwind.config = {
-        darkMode: 'class', // Habilita o modo escuro via classe
-        theme: {
-            extend: {
-                colors: {
-                    'coop-green': '#10B981', // Emerald 500
-                    'coop-dark': '#1F2937', // Gray 800
-                },
-                fontFamily: {
-                    sans: ['Inter', 'sans-serif'],
-                },
-            }
-        }
-    }
-</script>
 <style>
-    /* Usando a fonte Inter e garantindo transição suave para o modo escuro */
+    /* Variáveis e Configurações (Simulando o Tailwind config) */
+    :root {
+        --coop-green: #10B981; /* Emerald 500 */
+        --coop-dark: #1F2937; /* Gray 800 */
+        --bg-light: #f9fafb; /* Gray 50 */
+        --text-light: #1f2937; /* Gray 800 */
+        --bg-dark: #111827; /* Gray 900 */
+        --text-dark: #f3f4f6; /* Gray 100 */
+        --bg-header-light: white;
+        --bg-header-dark: #1f2937; /* Gray 800 */
+        --bg-nav-light: #e5e7eb; /* Gray 200 */
+        --bg-nav-dark: #374151; /* Gray 700 */
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Estilos base (Simulando Tailwind base) */
     body {
         font-family: 'Inter', sans-serif;
+        margin: 0;
+        background-color: var(--bg-light);
+        color: var(--text-light);
         transition: background-color 0.3s, color 0.3s;
     }
-    .main-content {
-        min-height: calc(100vh - 128px); /* Altura mínima para manter o footer no lugar */
+    .dark body {
+        background-color: var(--bg-dark);
+        color: var(--text-dark);
     }
-    /* Estilo para a animação de carregamento */
-    .loader {
-        border-top-color: #3498db;
-        -webkit-animation: spin 1s linear infinite;
-        animation: spin 1s linear infinite;
+    .container {
+        max-width: 1280px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1rem;
     }
-    @-webkit-keyframe spin {
-        0% { -webkit-transform: rotate(0deg); }
-        100% { -webkit-transform: rotate(360deg); }
+    .hidden {
+        display: none !important;
     }
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .justify-between { justify-content: space-between; }
+    .items-center { align-items: center; }
+    .p-4 { padding: 1rem; }
+    .px-4 { padding-left: 1rem; padding-right: 1rem; }
+    .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+    .text-2xl { font-size: 1.5rem; }
+    .font-bold { font-weight: 700; }
+    .font-extrabold { font-weight: 800; }
+    .rounded-lg { border-radius: 0.5rem; }
+    .shadow-md { box-shadow: var(--shadow-md); }
+    .shadow-lg { box-shadow: var(--shadow-lg); }
+    .transition { transition: all 0.15s ease-in-out; }
+    .space-x-4 > * + * { margin-left: 1rem; }
+    .space-y-4 > * + * { margin-top: 1rem; }
+    .text-center { text-align: center; }
+
+    /* Estilos Específicos */
+    header {
+        background-color: var(--bg-header-light);
+        box-shadow: var(--shadow-md);
+        position: sticky;
+        top: 0;
+        z-index: 10;
     }
+    .dark header {
+        background-color: var(--bg-header-dark);
+    }
+
+    nav {
+        background-color: var(--bg-nav-light);
+        box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+    }
+    .dark nav {
+        background-color: var(--bg-nav-dark);
+        box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .nav-button {
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s, color 0.2s;
+    }
+    .nav-button:not(.active) {
+        background-color: #f3f4f6; /* Gray 100 */
+        color: #374151; /* Gray 700 */
+    }
+    .dark .nav-button:not(.active) {
+        background-color: #374151; /* Gray 700 */
+        color: #f3f4f6; /* Gray 100 */
+    }
+    .nav-button:not(.active):hover {
+        background-color: rgba(16, 185, 129, 0.2); /* coop-green/20 */
+    }
+    .nav-button.active {
+        background-color: var(--coop-green);
+        color: white;
+    }
+    .dark .nav-button.active {
+        background-color: var(--coop-green); /* Dark mode active is same for contrast */
+    }
+
+    .card {
+        background-color: white;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid #e5e7eb;
+        transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .dark .card {
+        background-color: var(--bg-header-dark);
+        border-color: #374151;
+    }
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Layout Grids */
+    #catalogo-lista {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+
+    /* Modal */
+    #custom-modal {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    #custom-modal > div {
+        background-color: white;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        max-width: 400px;
+        width: 100%;
+    }
+    .dark #custom-modal > div {
+        background-color: var(--bg-header-dark);
+    }
+
+    /* Utils */
+    .text-coop-green { color: var(--coop-green); }
+    .bg-coop-green { background-color: var(--coop-green); }
+    .bg-coop-green:hover { background-color: rgba(16, 185, 129, 0.8); }
 </style>
 </head>
 
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
+<body class="bg-gray-50 text-gray-800">
 
-<!-- Header -->
-<header class="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center sticky top-0 z-10">
-    <div class="flex items-center space-x-3">
+<header class="p-4 flex justify-between items-center">
+    <div class="flex items-center" style="gap: 0.75rem;">
         <h1 class="text-2xl font-bold text-coop-green">🌾 Cooperativa de Insumos</h1>
-        <div id="user-info" class="text-sm text-gray-500 dark:text-gray-400"></div>
+        <div id="user-info" class="text-sm text-gray-500">Usuário ID: Mocked...</div>
     </div>
-    <button id="modo-btn" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-100 rounded-lg shadow-sm hover:ring-2 ring-coop-green transition">
+    <button id="modo-btn" class="px-4 py-2 rounded-lg shadow-sm transition" style="background-color: #f3f4f6; color: #374151;">
         🌙 Modo Escuro
     </button>
 </header>
 
-<!-- Navigation -->
-<nav class="bg-gray-200 dark:bg-gray-700 p-3 shadow-inner md:flex md:justify-center">
-    <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
-        <button id="nav-home" onclick="mostrar('home')" class="nav-button bg-coop-green text-white">Início</button>
+<nav class="p-3 shadow-inner flex justify-center">
+    <div class="flex" style="gap: 1rem;">
+        <button id="nav-home" onclick="mostrar('home')" class="nav-button active">Início</button>
         <button id="nav-catalogo" onclick="mostrar('catalogo')" class="nav-button">Catálogo</button>
         <button id="nav-carrinho" onclick="mostrar('carrinho')" class="nav-button">🛒 Carrinho</button>
-        <button id="nav-relatorios" onclick="mostrar('relatorios')" class="nav-button">📊 Relatórios</button>
-    </div>
+        </div>
 </nav>
 
-<!-- Main Content Area -->
-<main class="container mx-auto p-4 main-content">
+<main class="container p-4">
 
-    <!-- Loading State -->
-    <div id="loading-state" class="flex flex-col items-center justify-center h-64 text-coop-green hidden">
-        <div class="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-12 w-12 mb-4"></div>
-        <p class="text-xl font-semibold">Carregando dados da Cooperativa...</p>
-    </div>
-
-    <!-- Home Section -->
-    <section id="home" class="py-12 text-center bg-white dark:bg-gray-800 rounded-xl shadow-lg">
-        <h2 class="text-4xl font-extrabold text-coop-green mb-4">Bem-vindo à sua Cooperativa!</h2>
-        <p class="text-lg mb-6 max-w-2xl mx-auto">Gerencie seus insumos e pedidos de forma prática, transparente e em tempo real.</p>
-        <img src="https://placehold.co/400x200/10B981/ffffff?text=Cooperativa+Digital" alt="Trator" class="mx-auto rounded-lg shadow-xl" onerror="this.onerror=null; this.src='https://img.icons8.com/fluency/240/tractor.png'">
-        <p class="mt-8 text-sm text-gray-500 dark:text-gray-400">Seu ID de usuário no Firestore: <span id="current-user-id" class="font-mono bg-gray-100 dark:bg-gray-700 p-1 rounded-md text-xs">Aguardando autenticação...</span></p>
+    <section id="home" class="py-12 text-center card">
+        <h2 class="text-4xl font-extrabold text-coop-green" style="margin-bottom: 1rem;">Bem-vindo à sua Cooperativa!</h2>
+        <p class="text-lg" style="margin-bottom: 1.5rem; max-width: 500px; margin-left: auto; margin-right: auto;">Gerencie seus insumos e pedidos de forma prática, transparente e em tempo real (simulado).</p>
+        <img src="https://placehold.co/400x200/10B981/ffffff?text=Cooperativa+Digital" alt="Trator" style="margin-left: auto; margin-right: auto; border-radius: 0.5rem; box-shadow: var(--shadow-lg);">
+        <p class="mt-8 text-sm text-gray-500" style="margin-top: 2rem;">ID de usuário: <span id="current-user-id" style="font-family: monospace; background-color: #f3f4f6; padding: 0.25rem; border-radius: 0.25rem; font-size: 0.75rem; color: #6b7280;">USER-12345-MOCK</span></p>
     </section>
 
-    <!-- Catálogo Section -->
     <section id="catalogo" class="hidden py-8">
-        <h2 class="text-3xl font-bold mb-6 border-b pb-2 border-coop-green/50">Catálogo de Insumos</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="catalogo-lista">
-            <!-- Insumos serão renderizados aqui -->
-            <p id="catalogo-loading" class="text-center md:col-span-3 text-gray-500">Carregando catálogo...</p>
+        <h2 class="text-3xl font-bold" style="margin-bottom: 1.5rem; border-bottom: 2px solid rgba(16, 185, 129, 0.5); padding-bottom: 0.5rem;">Catálogo de Insumos</h2>
+        <div id="catalogo-lista">
+            <p id="catalogo-loading" style="text-align: center; color: #6b7280; grid-column: 1 / -1;">Carregando catálogo...</p>
         </div>
     </section>
 
-    <!-- Carrinho Section -->
     <section id="carrinho" class="hidden py-8">
-        <h2 class="text-3xl font-bold mb-6 border-b pb-2 border-coop-green/50">🛒 Seu Carrinho</h2>
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6">
-            <ul id="carrinho-lista" class="space-y-4 divide-y divide-gray-200 dark:divide-gray-700">
-                <!-- Itens do carrinho serão renderizados aqui -->
-                <li class="py-2 text-gray-500 dark:text-gray-400" id="carrinho-vazio">O seu carrinho está vazio.</li>
+        <h2 class="text-3xl font-bold" style="margin-bottom: 1.5rem; border-bottom: 2px solid rgba(16, 185, 129, 0.5); padding-bottom: 0.5rem;">🛒 Seu Carrinho</h2>
+        <div class="card p-6">
+            <ul id="carrinho-lista" style="list-style: none; padding: 0; margin-bottom: 0; border-top: 1px solid #e5e7eb;">
+                <li id="carrinho-vazio" style="padding: 0.5rem 0; color: #6b7280;">O seu carrinho está vazio.</li>
             </ul>
-            <div class="mt-6 pt-4 border-t border-gray-300 dark:border-gray-600 flex justify-between items-center">
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #d1d5db; display: flex; justify-content: space-between; align-items: center;">
                 <h3 id="total" class="text-xl font-extrabold text-coop-green">Total: R$ 0,00</h3>
-                <button onclick="finalizarPedido()" class="px-6 py-3 bg-coop-green text-white font-semibold rounded-full shadow-lg hover:bg-coop-green/80 transition disabled:opacity-50" id="btn-finalizar-pedido">
+                <button onclick="finalizarPedido()" class="px-6 py-3 bg-coop-green text-white font-semibold rounded-lg shadow-lg transition" id="btn-finalizar-pedido" disabled>
                     Finalizar Pedido
                 </button>
             </div>
         </div>
     </section>
 
-    <!-- Relatórios Section -->
-    <section id="relatorios" class="hidden py-8">
-        <h2 class="text-3xl font-bold mb-6 border-b pb-2 border-coop-green/50">📊 Relatório de Vendas (Últimos Meses)</h2>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6">
-            <canvas id="graficoVendas"></canvas>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-4">Os dados são carregados em tempo real do Firestore.</p>
-        </div>
-    </section>
-
-    <!-- Custom Modal Placeholder (for alerts/confirmations) -->
-    <div id="custom-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-2xl max-w-sm w-full">
-            <h3 id="modal-title" class="text-xl font-bold mb-3 text-coop-dark dark:text-white"></h3>
-            <p id="modal-message" class="mb-5 text-gray-700 dark:text-gray-300"></p>
-            <div id="modal-actions" class="flex justify-end space-x-3">
-                <!-- Buttons will be inserted here -->
-            </div>
+    <div id="custom-modal" class="fixed hidden items-center justify-center" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0;">
+        <div>
+            <h3 id="modal-title" class="text-xl font-bold" style="margin-bottom: 0.75rem; color: var(--coop-dark);"></h3>
+            <p id="modal-message" style="margin-bottom: 1.25rem; color: #4b5563;"></p>
+            <div id="modal-actions" class="flex justify-end" style="gap: 0.75rem;">
+                </div>
         </div>
     </div>
 
 </main>
 
-<!-- Footer -->
-<footer class="bg-gray-300 dark:bg-gray-800 p-4 text-center text-sm text-gray-600 dark:text-gray-400 mt-8">
-    <p>© 2025 Cooperativa Verde Sustentável | Desenvolvido com Firebase e Tailwind</p>
+<footer style="background-color: #d1d5db; padding: 1rem; text-align: center; font-size: 0.875rem; color: #4b5563; margin-top: 2rem;">
+    <p>© 2025 Cooperativa Verde Sustentável | Simulação em HTML/CSS/JS Puro</p>
 </footer>
 
-<!-- Firebase and App Logic -->
-<script type="module">
-    // Importações do Firebase
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, onSnapshot, collection, query, setDoc, addDoc, updateDoc, deleteDoc, getDocs, where, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-    import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-    // Variáveis globais obrigatórias do Canvas
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-    let app, db, auth;
-    let userId = null;
-    let currentChart = null;
-    let carrinhoData = []; // Armazena os documentos do carrinho
-
-    // Definições de caminhos no Firestore
-    const PATHS = {
-        CATALOGO: `/artifacts/${appId}/public/data/insumos`,
-        VENDAS: `/artifacts/${appId}/public/data/vendas_relatorio`,
-        get CARRINHO() { return `/artifacts/${appId}/users/${userId}/carrinho`; }
-    };
-
-    setLogLevel('debug'); // Ativa logs do Firestore
+<script>
+    // --- DADOS MOCKADOS (Substituindo Firestore) ---
+    const initialInsumos = [
+        { id: '1', name: "Fertilizante NPK 10-10-10", price: 150.50, unit: "Saco (50kg)", estoque: 500 },
+        { id: '2', name: "Semente de Soja (Cultivar X)", price: 320.00, unit: "Hectare", estoque: 150 },
+        { id: '3', name: "Defensivo Fungicida", price: 285.90, unit: "Litro", estoque: 800 },
+        { id: '4', name: "Corretivo de Solo (Calcário)", price: 45.00, unit: "Ton", estoque: 1200 },
+        { id: '5', name: "Ureia Granulada", price: 180.00, unit: "Saco (50kg)", estoque: 600 },
+        { id: '6', name: "Pneu para Trator", price: 2500.00, unit: "Unidade", estoque: 50 },
+    ];
+    let carrinhoData = []; // Armazena os itens do carrinho localmente
 
     // --- UTILS DE UI ---
 
     // Função para mostrar seção
-    window.mostrar = (sectionId) => {
-        const sections = ['home', 'catalogo', 'carrinho', 'relatorios'];
+    const mostrar = (sectionId) => {
+        const sections = ['home', 'catalogo', 'carrinho'];
         sections.forEach(id => {
             const section = document.getElementById(id);
+            const navBtn = document.getElementById(`nav-${id}`);
             if (section) {
                 section.classList.add('hidden');
-                document.getElementById(`nav-${id}`).classList.remove('bg-coop-green', 'text-white', 'dark:bg-coop-green/90');
-                document.getElementById(`nav-${id}`).classList.add('bg-gray-100', 'dark:bg-gray-600', 'text-gray-700', 'dark:text-gray-100');
+            }
+            if (navBtn) {
+                navBtn.classList.remove('active');
             }
         });
 
         const activeSection = document.getElementById(sectionId);
+        const activeNavBtn = document.getElementById(`nav-${sectionId}`);
         if (activeSection) {
             activeSection.classList.remove('hidden');
-            document.getElementById(`nav-${sectionId}`).classList.add('bg-coop-green', 'text-white', 'dark:bg-coop-green/90');
-            document.getElementById(`nav-${sectionId}`).classList.remove('bg-gray-100', 'dark:bg-gray-600', 'text-gray-700', 'dark:text-gray-100');
         }
-
-        // Se for o relatório, garanta que o gráfico seja desenhado
-        if (sectionId === 'relatorios') {
-            loadSalesData();
+        if (activeNavBtn) {
+            activeNavBtn.classList.add('active');
         }
     };
-    
-    // Configuração inicial dos botões de navegação
-    document.querySelectorAll('.nav-button').forEach(button => {
-        button.classList.add('px-4', 'py-2', 'rounded-lg', 'font-semibold', 'transition-colors', 'hover:bg-coop-green/20', 'dark:hover:bg-coop-green/20');
-        if (button.id !== 'nav-home') {
-            button.classList.add('bg-gray-100', 'dark:bg-gray-600', 'text-gray-700', 'dark:text-gray-100');
-        }
-    });
+    window.mostrar = mostrar; // Torna acessível no onclick do HTML
 
-    // Função de Modal Personalizado (Substitui alert/confirm)
+    // Função de Modal Personalizado
     const customModal = (title, message, actions) => {
         const modal = document.getElementById('custom-modal');
         document.getElementById('modal-title').textContent = title;
@@ -218,7 +271,17 @@
         actions.forEach(action => {
             const button = document.createElement('button');
             button.textContent = action.label;
+            // Simplificação de classes CSS para o modal
             button.className = action.class || 'px-4 py-2 rounded-lg transition';
+            button.style.cssText = action.style || 'padding: 0.5rem 1rem; border-radius: 0.5rem; transition: background-color 0.15s;';
+            if (action.class && action.class.includes('bg-coop-green')) {
+                button.style.backgroundColor = 'var(--coop-green)';
+                button.style.color = 'white';
+            } else {
+                button.style.backgroundColor = '#d1d5db'; // Gray 300
+                button.style.color = 'black';
+            }
+
             button.onclick = () => {
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
@@ -232,7 +295,6 @@
     };
 
     // --- LÓGICA DO MODO ESCURO ---
-
     document.getElementById('modo-btn').addEventListener('click', () => {
         if (document.documentElement.classList.contains('dark')) {
             document.documentElement.classList.remove('dark');
@@ -245,130 +307,13 @@
         }
     });
 
-    // Inicializa o tema baseado no localStorage
     const initTheme = () => {
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
             document.getElementById('modo-btn').textContent = '☀️ Modo Claro';
-        } else {
-            document.documentElement.classList.remove('dark');
-            document.getElementById('modo-btn').textContent = '🌙 Modo Escuro';
         }
     };
-
-    // --- LÓGICA FIREBASE E AUTH ---
-
-    const setupAuthAndApp = async () => {
-        try {
-            document.getElementById('loading-state').classList.remove('hidden');
-            
-            if (!Object.keys(firebaseConfig).length) {
-                console.error("Firebase config não está disponível.");
-                customModal("Erro de Configuração", "A configuração do Firebase não foi carregada. A aplicação não pode funcionar sem o backend.", [{ label: "OK", class: "bg-red-500 text-white hover:bg-red-600" }]);
-                return;
-            }
-
-            app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
-
-            // Tenta autenticação com o token customizado
-            if (initialAuthToken) {
-                await signInWithCustomToken(auth, initialAuthToken);
-            } else {
-                // Se não houver token, faz login anônimo
-                await signInAnonymously(auth);
-            }
-
-            // Garante que o estado de autenticação seja resolvido
-            await new Promise(resolve => {
-                const unsubscribe = onAuthStateChanged(auth, user => {
-                    if (user) {
-                        userId = user.uid;
-                        document.getElementById('current-user-id').textContent = userId;
-                        document.getElementById('user-info').textContent = `Usuário ID: ${userId.substring(0, 8)}...`;
-                        
-                        // Inicia os listeners de dados
-                        loadCatalogListener();
-                        loadCartListener();
-                        checkAndPopulateInitialData();
-                        
-                        // Exibe a home page
-                        mostrar('home');
-                    } else {
-                        // Isso só deve acontecer se o signInWithCustomToken falhar.
-                        console.warn("Usuário deslogado.");
-                        userId = 'anonimo';
-                    }
-                    unsubscribe(); // Desliga o listener após a primeira execução
-                    resolve();
-                });
-            });
-
-        } catch (error) {
-            console.error("Erro na inicialização ou autenticação do Firebase:", error);
-            customModal("Erro de Conexão", `Não foi possível conectar ao backend. Detalhe: ${error.message}`, [{ label: "Tentar Novamente", class: "bg-coop-green text-white hover:bg-coop-green/80", callback: setupAuthAndApp }]);
-        } finally {
-            document.getElementById('loading-state').classList.add('hidden');
-        }
-    };
-
-    // --- LÓGICA DE DADOS INICIAIS (CATÁLOGO E VENDAS) ---
-
-    const initialInsumos = [
-        { name: "Fertilizante NPK 10-10-10", price: 150.50, unit: "Saco (50kg)", estoque: 500 },
-        { name: "Semente de Soja (Cultivar X)", price: 320.00, unit: "Hectare", estoque: 150 },
-        { name: "Defensivo Fungicida", price: 285.90, unit: "Litro", estoque: 800 },
-        { name: "Corretivo de Solo (Calcário)", price: 45.00, unit: "Ton", estoque: 1200 },
-        { name: "Ureia Granulada", price: 180.00, unit: "Saco (50kg)", estoque: 600 },
-        { name: "Pneu para Trator", price: 2500.00, unit: "Unidade", estoque: 50 },
-    ];
-
-    const initialSales = [
-        { month: "Jan/24", sales: 120000 },
-        { month: "Fev/24", sales: 155000 },
-        { month: "Mar/24", sales: 90000 },
-        { month: "Abr/24", sales: 210000 },
-        { month: "Mai/24", sales: 180000 },
-        { month: "Jun/24", sales: 240000 },
-    ];
-
-    const checkAndPopulateInitialData = async () => {
-        try {
-            // 1. Catálogo
-            const insumosRef = collection(db, PATHS.CATALOGO);
-            const insumosSnapshot = await getDocs(insumosRef);
-            if (insumosSnapshot.empty) {
-                console.log("Catálogo vazio, populando dados iniciais...");
-                const batch = writeBatch(db);
-                initialInsumos.forEach(insumo => {
-                    const newDocRef = doc(insumosRef);
-                    batch.set(newDocRef, insumo);
-                });
-                await batch.commit();
-                console.log("Catálogo populado.");
-            }
-
-            // 2. Vendas
-            const vendasRef = collection(db, PATHS.VENDAS);
-            const vendasSnapshot = await getDocs(vendasRef);
-            if (vendasSnapshot.empty) {
-                console.log("Relatório de vendas vazio, populando dados iniciais...");
-                const batch = writeBatch(db);
-                initialSales.forEach(sale => {
-                    // Usa o nome do mês como ID para evitar duplicatas simples
-                    const docRef = doc(vendasRef, sale.month.replace('/', '-'));
-                    batch.set(docRef, sale);
-                });
-                await batch.commit();
-                console.log("Vendas populadas.");
-            }
-        } catch (error) {
-            console.error("Erro ao verificar/popular dados iniciais:", error);
-        }
-    };
-
 
     // --- LÓGICA DO CATÁLOGO (LEITURA) ---
 
@@ -376,24 +321,24 @@
         const lista = document.getElementById('catalogo-lista');
         const loading = document.getElementById('catalogo-loading');
         lista.innerHTML = '';
-        loading.classList.add('hidden');
+        if(loading) loading.classList.add('hidden'); // Esconde a mensagem de loading
 
         if (items.length === 0) {
-            lista.innerHTML = '<p class="text-center md:col-span-3 text-gray-500">Nenhum insumo encontrado no catálogo.</p>';
+            lista.innerHTML = '<p style="text-align: center; color: #6b7280; grid-column: 1 / -1;">Nenhum insumo encontrado no catálogo.</p>';
             return;
         }
 
         items.forEach(item => {
             const card = document.createElement('div');
-            card.className = 'bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 border border-gray-200 dark:border-gray-700';
+            card.className = 'card';
             card.innerHTML = `
-                <h3 class="text-xl font-bold text-coop-green mb-2">${item.name}</h3>
-                <p class="text-3xl font-extrabold mb-3">R$ ${item.price.toFixed(2)}</p>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Unidade: ${item.unit}</p>
-                <p class="text-xs text-gray-500 dark:text-gray-500 mb-4">Em estoque: ${item.estoque || 'N/D'}</p>
+                <h3 class="text-xl font-bold text-coop-green" style="margin-bottom: 0.5rem;">${item.name}</h3>
+                <p class="text-3xl font-extrabold" style="margin-bottom: 0.75rem;">R$ ${item.price.toFixed(2)}</p>
+                <p class="text-sm" style="color: #6b7280; margin-bottom: 1rem;">Unidade: ${item.unit}</p>
+                <p class="text-xs" style="color: #9ca3af; margin-bottom: 1rem;">Em estoque: ${item.estoque || 'N/D'}</p>
                 <button 
                     onclick="addItemToCart('${item.id}', '${item.name.replace(/'/g, "\\'")}', ${item.price})" 
-                    class="w-full px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition"
+                    style="width: 100%; padding: 0.5rem 1rem; background-color: #3b82f6; color: white; font-weight: 600; border-radius: 0.5rem; transition: background-color 0.15s;"
                 >
                     Adicionar ao Carrinho
                 </button>
@@ -402,123 +347,12 @@
         });
     };
 
-    const loadCatalogListener = () => {
-        const q = collection(db, PATHS.CATALOGO);
-        onSnapshot(q, (snapshot) => {
-            const insumos = [];
-            snapshot.forEach(doc => {
-                insumos.push({ id: doc.id, ...doc.data() });
-            });
-            renderCatalog(insumos);
-            console.log("Catálogo atualizado em tempo real.");
-        }, (error) => {
-            console.error("Erro ao ouvir o catálogo:", error);
-            document.getElementById('catalogo-lista').innerHTML = `<p class="text-center md:col-span-3 text-red-500">Erro ao carregar o catálogo: ${error.message}</p>`;
-        });
+    const loadCatalog = () => {
+        // Simula o carregamento dos dados iniciais
+        renderCatalog(initialInsumos);
     };
 
-    // --- LÓGICA DO CARRINHO (CRUD) ---
-
-    window.addItemToCart = async (insumoId, name, price) => {
-        if (!userId) {
-            customModal("Ação Negada", "O aplicativo ainda está carregando a sua sessão. Tente novamente em instantes.", [{ label: "Entendi", class: "bg-coop-green text-white hover:bg-coop-green/80" }]);
-            return;
-        }
-
-        const q = query(collection(db, PATHS.CARRINHO), where('insumoId', '==', insumoId));
-        const existingDocs = await getDocs(q);
-
-        if (!existingDocs.empty) {
-            // Se o item já existe, apenas incrementa a quantidade
-            const existingDoc = existingDocs.docs[0];
-            const newQuantity = (existingDoc.data().quantity || 1) + 1;
-            await updateDoc(doc(db, PATHS.CARRINHO, existingDoc.id), { quantity: newQuantity });
-            console.log("Item atualizado no carrinho.");
-        } else {
-            // Se o item for novo, adiciona
-            await addDoc(collection(db, PATHS.CARRINHO), {
-                insumoId,
-                name,
-                price,
-                quantity: 1,
-                addedAt: new Date().toISOString()
-            });
-            console.log("Item adicionado ao carrinho.");
-        }
-        customModal("Adicionado!", `${name} foi adicionado ao seu carrinho.`, [{ label: "Continuar Comprando", class: "bg-coop-green text-white hover:bg-coop-green/80" }]);
-    };
-
-    window.removeItemFromCart = async (docId) => {
-        try {
-            await deleteDoc(doc(db, PATHS.CARRINHO, docId));
-            console.log("Item removido do carrinho.");
-        } catch (error) {
-            console.error("Erro ao remover item do carrinho:", error);
-            customModal("Erro", "Não foi possível remover o item.", [{ label: "OK", class: "bg-red-500 text-white hover:bg-red-600" }]);
-        }
-    };
-
-    window.updateItemQuantity = async (docId, newQuantity) => {
-        if (newQuantity < 1) {
-             customModal("Atenção", "A quantidade mínima permitida é 1. Use o botão de remover para exclusão.", [{ label: "OK", class: "bg-coop-green text-white hover:bg-coop-green/80" }]);
-             return;
-        }
-        try {
-            await updateDoc(doc(db, PATHS.CARRINHO, docId), { quantity: newQuantity });
-        } catch (error) {
-            console.error("Erro ao atualizar quantidade:", error);
-        }
-    }
-
-    window.finalizarPedido = () => {
-        if (carrinhoData.length === 0) {
-            customModal("Carrinho Vazio", "Seu carrinho precisa ter itens para finalizar o pedido.", [{ label: "OK", class: "bg-red-500 text-white hover:bg-red-600" }]);
-            return;
-        }
-
-        const total = carrinhoData.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-        customModal("Confirmar Pedido", 
-            `O valor total do seu pedido é R$ ${total.toFixed(2)}. Deseja confirmar e esvaziar o carrinho?`,
-            [
-                { label: "Cancelar", class: "bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-400" },
-                { 
-                    label: "Confirmar Pedido", 
-                    class: "bg-coop-green text-white hover:bg-coop-green/80", 
-                    callback: processarPedido
-                }
-            ]
-        );
-    }
-    
-    const processarPedido = async () => {
-        const batch = writeBatch(db);
-        carrinhoData.forEach(item => {
-            // Prepara para deletar o item do carrinho
-            const docRef = doc(db, PATHS.CARRINHO, item.id);
-            batch.delete(docRef);
-        });
-
-        // Adiciona um registro de pedido (simulação)
-        const total = carrinhoData.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        const pedidoData = {
-            userId: userId,
-            items: carrinhoData.map(item => ({ name: item.name, quantity: item.quantity, price: item.price })),
-            total: total,
-            data: new Date().toISOString()
-        };
-        // Aqui você adicionaria o pedido a uma coleção de pedidos finalizados
-        // Exemplo: batch.set(doc(collection(db, `artifacts/${appId}/public/data/pedidos`), new Date().getTime().toString()), pedidoData);
-
-        try {
-            await batch.commit();
-            customModal("Pedido Realizado!", "Seu pedido foi finalizado com sucesso e seu carrinho esvaziado!", [{ label: "Ótimo!", class: "bg-coop-green text-white hover:bg-coop-green/80" }]);
-        } catch (error) {
-            console.error("Erro ao processar pedido:", error);
-            customModal("Erro no Pedido", "Não foi possível finalizar seu pedido. Tente novamente.", [{ label: "OK", class: "bg-red-500 text-white hover:bg-red-600" }]);
-        }
-    }
-
+    // --- LÓGICA DO CARRINHO (CRUD Local) ---
 
     const renderCart = (items) => {
         carrinhoData = items;
@@ -533,6 +367,7 @@
         if (items.length === 0) {
             emptyMessage.classList.remove('hidden');
             finalizarBtn.disabled = true;
+            lista.appendChild(emptyMessage);
         } else {
             emptyMessage.classList.add('hidden');
             finalizarBtn.disabled = false;
@@ -542,23 +377,26 @@
                 total += subtotal;
 
                 const listItem = document.createElement('li');
-                listItem.className = 'flex flex-col sm:flex-row justify-between items-start sm:items-center py-3';
+                listItem.style.cssText = 'display: flex; flex-direction: column; padding: 0.75rem 0; border-bottom: 1px solid #e5e7eb;';
+                
                 listItem.innerHTML = `
-                    <div class="flex-1 min-w-0">
-                        <p class="text-lg font-semibold text-coop-dark dark:text-white">${item.name}</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">R$ ${item.price.toFixed(2)} / un.</p>
-                    </div>
-                    <div class="flex items-center space-x-3 mt-2 sm:mt-0">
-                        <div class="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg">
-                            <button onclick="updateItemQuantity('${item.id}', ${item.quantity - 1})" class="px-3 py-1 text-coop-green hover:bg-gray-100 dark:hover:bg-gray-700 rounded-l-lg transition">-</button>
-                            <input type="number" min="1" value="${item.quantity}" onchange="updateItemQuantity('${item.id}', parseInt(this.value))" 
-                                class="w-12 text-center bg-transparent border-none focus:ring-0 p-1 text-gray-800 dark:text-gray-100" />
-                            <button onclick="updateItemQuantity('${item.id}', ${item.quantity + 1})" class="px-3 py-1 text-coop-green hover:bg-gray-100 dark:hover:bg-gray-700 rounded-r-lg transition">+</button>
+                    <div style="flex: 1; min-width: 0; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <p class="text-lg font-semibold" style="color: var(--coop-dark); margin-bottom: 0.25rem;">${item.name}</p>
+                            <p class="text-sm" style="color: #6b7280;">R$ ${item.price.toFixed(2)} / un.</p>
                         </div>
-                        <p class="font-bold w-24 text-right">R$ ${subtotal.toFixed(2)}</p>
-                        <button onclick="removeItemFromCart('${item.id}')" class="p-2 text-red-500 hover:text-red-700 dark:hover:text-red-400 transition">
-                            <!-- SVG Lixeira -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <div style="font-weight: 700; width: 100px; text-align: right;">R$ ${subtotal.toFixed(2)}</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 0.5rem; justify-content: flex-end;">
+                        <div style="display: flex; align-items: center; border: 1px solid #d1d5db; border-radius: 0.5rem;">
+                            <button onclick="updateItemQuantity('${item.insumoId}', ${item.quantity - 1})" 
+                                style="padding: 0.25rem 0.75rem; color: var(--coop-green); background-color: transparent; border: none; cursor: pointer; border-right: 1px solid #d1d5db;">-</button>
+                            <span style="width: 30px; text-align: center; padding: 0.25rem 0;">${item.quantity}</span>
+                            <button onclick="updateItemQuantity('${item.insumoId}', ${item.quantity + 1})" 
+                                style="padding: 0.25rem 0.75rem; color: var(--coop-green); background-color: transparent; border: none; cursor: pointer; border-left: 1px solid #d1d5db;">+</button>
+                        </div>
+                        <button onclick="removeItemFromCart('${item.insumoId}')" style="padding: 0.5rem; color: #ef4444; border: none; background: none; cursor: pointer;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 10-2 0v6a1 1 0 102 0V8z" clip-rule="evenodd" />
                             </svg>
                         </button>
@@ -569,115 +407,85 @@
         }
         totalElement.textContent = `Total: R$ ${total.toFixed(2)}`;
     };
+    
+    // Simula a adição (ou atualização) de um item no carrinho
+    const addItemToCart = (insumoId, name, price) => {
+        const existingItem = carrinhoData.find(item => item.insumoId === insumoId);
 
-    const loadCartListener = () => {
-        const q = collection(db, PATHS.CARRINHO);
-        onSnapshot(q, (snapshot) => {
-            const items = [];
-            snapshot.forEach(doc => {
-                items.push({ id: doc.id, ...doc.data() });
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            carrinhoData.push({
+                insumoId,
+                name,
+                price,
+                quantity: 1
             });
-            renderCart(items);
-            console.log("Carrinho atualizado em tempo real.");
-        }, (error) => {
-            console.error("Erro ao ouvir o carrinho:", error);
-            document.getElementById('carrinho-lista').innerHTML = `<li class="py-2 text-red-500">Erro ao carregar o carrinho: ${error.message}</li>`;
-        });
+        }
+        renderCart(carrinhoData);
+        customModal("Adicionado!", `${name} foi adicionado ao seu carrinho.`, [{ label: "Continuar Comprando", class: "bg-coop-green text-white", style: 'background-color: var(--coop-green); color: white;' }]);
+    };
+    window.addItemToCart = addItemToCart;
+
+    // Simula a remoção de um item
+    const removeItemFromCart = (insumoId) => {
+        carrinhoData = carrinhoData.filter(item => item.insumoId !== insumoId);
+        renderCart(carrinhoData);
+    };
+    window.removeItemFromCart = removeItemFromCart;
+
+    // Simula a atualização da quantidade
+    const updateItemQuantity = (insumoId, newQuantity) => {
+        if (newQuantity < 1) {
+             customModal("Atenção", "A quantidade mínima permitida é 1. Use o ícone de lixeira para exclusão.", [{ label: "OK", class: "bg-coop-green text-white", style: 'background-color: var(--coop-green); color: white;' }]);
+             return;
+        }
+        const item = carrinhoData.find(item => item.insumoId === insumoId);
+        if (item) {
+            item.quantity = newQuantity;
+            renderCart(carrinhoData);
+        }
+    }
+    window.updateItemQuantity = updateItemQuantity;
+
+    // Simula a finalização do pedido
+    const processarPedido = () => {
+        console.log("Pedido processado:", carrinhoData);
+        carrinhoData = []; // Esvazia o carrinho
+        renderCart(carrinhoData); // Renderiza a lista vazia
+        customModal("Pedido Realizado!", "Seu pedido foi finalizado com sucesso e seu carrinho esvaziado!", [{ label: "Ótimo!", class: "bg-coop-green text-white", style: 'background-color: var(--coop-green); color: white;' }]);
     };
 
-    // --- LÓGICA DO RELATÓRIO (CHART.JS) ---
-
-    const loadSalesData = () => {
-        const q = collection(db, PATHS.VENDAS);
-        onSnapshot(q, (snapshot) => {
-            const sales = [];
-            snapshot.forEach(doc => {
-                sales.push(doc.data());
-            });
-
-            // Ordena os dados se necessário (aqui vou confiar na ordem de inserção do mock)
-            sales.sort((a, b) => new Date('1 ' + a.month.replace('/', ' 20') ) - new Date('1 ' + b.month.replace('/', ' 20')));
-
-            const labels = sales.map(s => s.month);
-            const data = sales.map(s => s.sales);
-
-            renderChart(labels, data);
-        }, (error) => {
-            console.error("Erro ao carregar dados de vendas:", error);
-        });
-    };
-
-    const renderChart = (labels, data) => {
-        const ctx = document.getElementById('graficoVendas').getContext('2d');
-        
-        // Se já houver um gráfico, destrói para evitar duplicatas
-        if (currentChart) {
-            currentChart.destroy();
+    const finalizarPedido = () => {
+        if (carrinhoData.length === 0) {
+            customModal("Carrinho Vazio", "Seu carrinho precisa ter itens para finalizar o pedido.", [{ label: "OK", class: "bg-red-500 text-white", style: 'background-color: #ef4444; color: white;' }]);
+            return;
         }
 
-        currentChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Vendas (R$)',
-                    data: data,
-                    backgroundColor: 'rgba(16, 185, 129, 0.8)', // coop-green com transparência
-                    borderColor: '#10B981',
-                    borderWidth: 1,
-                    borderRadius: 6,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Valor (R$)'
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return 'R$ ' + value.toLocaleString('pt-BR');
-                            }
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Mês'
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                label += new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(context.parsed.y);
-                                return label;
-                            }
-                        }
-                    }
+        const total = carrinhoData.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+        customModal("Confirmar Pedido", 
+            `O valor total do seu pedido é R$ ${total.toFixed(2)}. Deseja confirmar e esvaziar o carrinho?`,
+            [
+                { label: "Cancelar", class: "bg-gray-300 text-gray-800" },
+                { 
+                    label: "Confirmar Pedido", 
+                    class: "bg-coop-green text-white", 
+                    style: 'background-color: var(--coop-green); color: white;',
+                    callback: processarPedido
                 }
-            }
-        });
-    };
+            ]
+        );
+    }
+    window.finalizarPedido = finalizarPedido;
 
     // --- INICIALIZAÇÃO DA APLICAÇÃO ---
 
     window.onload = () => {
-        initTheme(); // Aplica o tema
-        setupAuthAndApp(); // Inicializa Firebase e autentica o usuário
+        initTheme();
+        loadCatalog(); // Carrega o catálogo mockado
+        renderCart(carrinhoData); // Inicializa o carrinho vazio
+        mostrar('home'); // Exibe a seção inicial
     };
 </script>
 </body>
