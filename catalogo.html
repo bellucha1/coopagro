@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooperativa de Insumos - Catálogo</title>
+<style>
+    /* Variáveis e Configurações (Simulando o Tailwind config) */
+    :root {
+        --coop-green: #10B981; /* Emerald 500 */
+        --coop-dark: #1F2937; /* Gray 800 */
+        --bg-light: #f9fafb; /* Gray 50 */
+        --text-light: #1f2937; /* Gray 800 */
+        --bg-dark: #111827; /* Gray 900 */
+        --text-dark: #f3f4f6; /* Gray 100 */
+        --bg-header-light: white;
+        --bg-header-dark: #1f2937; /* Gray 800 */
+        --bg-nav-light: #e5e7eb; /* Gray 200 */
+        --bg-nav-dark: #374151; /* Gray 700 */
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Estilos base */
+    body {
+        font-family: 'Inter', sans-serif;
+        margin: 0;
+        background-color: var(--bg-light);
+        color: var(--text-light);
+        transition: background-color 0.3s, color 0.3s;
+    }
+    .dark body {
+        background-color: var(--bg-dark);
+        color: var(--text-dark);
+    }
+    .container {
+        max-width: 1280px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1rem;
+    }
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .justify-between { justify-content: space-between; }
+    .items-center { align-items: center; }
+    .p-4 { padding: 1rem; }
+    .px-4 { padding-left: 1rem; padding-right: 1rem; }
+    .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+    .text-2xl { font-size: 1.5rem; }
+    .text-3xl { font-size: 1.875rem; }
+    .text-xl { font-size: 1.25rem; }
+    .text-lg { font-size: 1.125rem; }
+    .font-bold { font-weight: 700; }
+    .font-extrabold { font-weight: 800; }
+    .rounded-lg { border-radius: 0.5rem; }
+    .shadow-md { box-shadow: var(--shadow-md); }
+    .shadow-lg { box-shadow: var(--shadow-lg); }
+    .transition { transition: all 0.15s ease-in-out; }
+
+    /* Estilos Específicos do Catálogo */
+    .card {
+        background-color: white;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid #e5e7eb; /* Gray 200 */
+        transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .dark .card {
+        background-color: var(--bg-header-dark); /* Gray 800 */
+        border-color: #374151; /* Gray 700 */
+    }
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    }
+    #catalogo-lista {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+
+    /* Utils */
+    .text-coop-green { color: var(--coop-green); }
+    .bg-coop-green { background-color: var(--coop-green); }
+    .bg-coop-green:hover { background-color: rgba(16, 185, 129, 0.8); }
+
+    /* Modal Styles */
+    #custom-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 50;
+    }
+    #custom-modal > div {
+        background-color: white;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        max-width: 400px;
+        width: 100%;
+    }
+    .dark #custom-modal > div {
+        background-color: var(--bg-header-dark);
+    }
+    .btn-action {
+        padding: 0.5rem 1rem; 
+        border-radius: 0.5rem; 
+        transition: background-color 0.15s;
+        border: none;
+        cursor: pointer;
+    }
+    .btn-green {
+        background-color: var(--coop-green);
+        color: white;
+    }
+    .btn-blue {
+        background-color: #3b82f6; /* Blue 500 */
+        color: white;
+        font-weight: 600;
+    }
+    .btn-blue:hover {
+        background-color: #2563eb; /* Blue 600 */
+    }
+</style>
+</head>
+
+<body>
+
+<header class="p-4 flex justify-between items-center shadow-md" style="background-color: var(--bg-header-light);">
+    <div class="flex items-center" style="gap: 0.75rem;">
+        <h1 class="text-2xl font-bold text-coop-green">🌾 Cooperativa de Insumos</h1>
+    </div>
+    <button id="modo-btn" class="px-4 py-2 rounded-lg shadow-sm transition" style="background-color: #f3f4f6; color: #374151;">
+        🌙 Modo Escuro
+    </button>
+</header>
+
+<main class="container p-4">
+
+    <section id="catalogo" class="py-8">
+        <h2 class="text-3xl font-bold" style="margin-bottom: 1.5rem; border-bottom: 2px solid rgba(16, 185, 129, 0.5); padding-bottom: 0.5rem;">Catálogo de Insumos</h2>
+        <div id="catalogo-lista">
+            <p id="catalogo-loading" style="text-align: center; color: #6b7280; grid-column: 1 / -1;">Carregando catálogo...</p>
+        </div>
+    </section>
+
+</main>
+
+<div id="custom-modal" class="hidden items-center justify-center">
+    <div>
+        <h3 id="modal-title" class="text-xl font-bold" style="margin-bottom: 0.75rem; color: var(--coop-dark);"></h3>
+        <p id="modal-message" style="margin-bottom: 1.25rem; color: #4b5563;"></p>
+        <div id="modal-actions" class="flex justify-end" style="gap: 0.75rem;">
+            </div>
+    </div>
+</div>
+
+<script>
+    // --- DADOS MOCKADOS (Simulando o catálogo estático) ---
+    const initialInsumos = [
+        { id: '1', name: "Fertilizante NPK 10-10-10", price: 150.50, unit: "Saco (50kg)", estoque: 500 },
+        { id: '2', name: "Semente de Soja (Cultivar X)", price: 320.00, unit: "Hectare", estoque: 150 },
+        { id: '3', name: "Defensivo Fungicida", price: 285.90, unit: "Litro", estoque: 800 },
+        { id: '4', name: "Corretivo de Solo (Calcário)", price: 45.00, unit: "Ton", estoque: 1200 },
+        { id: '5', name: "Ureia Granulada", price: 180.00, unit: "Saco (50kg)", estoque: 600 },
+        { id: '6', name: "Pneu para Trator", price: 2500.00, unit: "Unidade", estoque: 50 },
+    ];
+    let carrinhoData = JSON.parse(localStorage.getItem('carrinhoCoop') || '[]'); // Mantém a simulação do carrinho em localStorage
+
+    // --- UTILS DE UI (Modal) ---
+
+    // Função de Modal Personalizado
+    const customModal = (title, message, actions) => {
+        const modal = document.getElementById('custom-modal');
+        document.getElementById('modal-title').textContent = title;
+        document.getElementById('modal-message').textContent = message;
+        
+        const actionsContainer = document.getElementById('modal-actions');
+        actionsContainer.innerHTML = '';
+        
+        actions.forEach(action => {
+            const button = document.createElement('button');
+            button.textContent = action.label;
+            button.className = 'btn-action';
+            
+            // Aplica estilos baseados na classe de ação
+            if (action.class && action.class.includes('bg-coop-green')) {
+                button.classList.add('btn-green');
+            } else {
+                button.style.backgroundColor = '#d1d5db'; // Gray 300
+                button.style.color = 'black';
+            }
+
+            button.onclick = () => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                if (action.callback) action.callback();
+            };
+            actionsContainer.appendChild(button);
+        });
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    };
+
+    // --- LÓGICA DO MODO ESCURO ---
+    document.getElementById('modo-btn').addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        document.getElementById('modo-btn').textContent = isDark ? '☀️ Modo Claro' : '🌙 Modo Escuro';
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+
+    const initTheme = () => {
+        const savedTheme = localStorage.getItem('theme');
+        const isDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isDark) {
+            document.documentElement.classList.add('dark');
+            document.getElementById('modo-btn').textContent = '☀️ Modo Claro';
+        }
+    };
+
+    // --- LÓGICA DO CATÁLOGO (RENDERIZAÇÃO) ---
+
+    const renderCatalog = (items) => {
+        const lista = document.getElementById('catalogo-lista');
+        const loading = document.getElementById('catalogo-loading');
+        lista.innerHTML = '';
+        if(loading) loading.classList.add('hidden'); 
+
+        if (items.length === 0) {
+            lista.innerHTML = '<p style="text-align: center; color: #6b7280; grid-column: 1 / -1;">Nenhum insumo encontrado no catálogo.</p>';
+            return;
+        }
+
+        items.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <h3 class="text-xl font-bold text-coop-green" style="margin-bottom: 0.5rem;">${item.name}</h3>
+                <p class="text-3xl font-extrabold" style="margin-bottom: 0.75rem;">R$ ${item.price.toFixed(2)}</p>
+                <p class="text-sm" style="color: #6b7280; margin-bottom: 1rem;">Unidade: ${item.unit}</p>
+                <p class="text-xs" style="color: #9ca3af; margin-bottom: 1rem;">Em estoque: ${item.estoque || 'N/D'}</p>
+                <button 
+                    onclick="addItemToCart('${item.id}', '${item.name.replace(/'/g, "\\'")}', ${item.price})" 
+                    class="btn-action btn-blue" style="width: 100%;"
+                >
+                    Adicionar ao Carrinho
+                </button>
+            `;
+            lista.appendChild(card);
+        });
+    };
+
+    const loadCatalog = () => {
+        renderCatalog(initialInsumos);
+    };
+
+    // --- LÓGICA DO CARRINHO (Simulação de adição) ---
+
+    const addItemToCart = (insumoId, name, price) => {
+        const existingItem = carrinhoData.find(item => item.insumoId === insumoId);
+
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            carrinhoData.push({
+                insumoId,
+                name,
+                price,
+                quantity: 1
+            });
+        }
+        
+        // Simula persistência do Firebase com localStorage
+        localStorage.setItem('carrinhoCoop', JSON.stringify(carrinhoData)); 
+
+        customModal("Adicionado!", `${name} foi adicionado ao seu carrinho. (Total de itens no carrinho: ${carrinhoData.length})`, [
+            { label: "Continuar Comprando", class: "bg-coop-green text-white" }
+        ]);
+    };
+    window.addItemToCart = addItemToCart;
+
+    // --- INICIALIZAÇÃO DA PÁGINA ---
+    window.onload = () => {
+        initTheme(); 
+        loadCatalog(); 
+    };
+</script>
+</body>
+</html>
